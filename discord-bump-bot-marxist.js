@@ -67,7 +67,7 @@ const bumpMessages = [
   "☭ Camarades ! L'heure de la révolution du bump a sonné ! `/bump` pour unir le prolétariat !",
   "⚒️ Prolétaires de tous les serveurs, unissez-vous ! C'est l'heure du `/bump` !",
   "🚩 La lutte des bumps continue ! Utilisez `/bump` pour la gloire du serveur !",
-  "⭐ Le monde nouveau  ne se créera pas tout seul, camarades ! `/bump` pour la cause !",
+  "⭐ Le monde nouveau ne se créera pas tout seul, camarades ! `/bump` pour la cause !",
   "🛠️ Les moyens de production du bump sont entre vos mains ! `/bump` maintenant !",
 ];
 
@@ -90,7 +90,8 @@ client.once('ready', async () => {
       { body: commands }
     );
     console.log('Les ordres de la révolution sont en place !');
-    
+   
+    keepAlive(); // Lancement du système de keep-alive
     startChecks();
     
     // Activités révolutionnaires
@@ -228,6 +229,22 @@ function startChecks() {
   }, 60000);
 }
 
+// Vérification du statut du bot
+function keepAlive() {
+  setInterval(() => {
+      if (client.ws.ping > 0) {
+          console.log(`Bot actif - Ping: ${client.ws.ping}ms`);
+      } else {
+          console.log('Reconnexion...');
+          client.login(process.env.DISCORD_TOKEN);
+      }
+  }, 300000); // Vérifie toutes les 5 minutes
+}
+
+// Début de la vérification en continue
+keepAlive();
+startChecks();
+
 // Gestion des obstacles à la révolution
 client.on('error', console.error);
 process.on('unhandledRejection', error => console.error('La révolution a rencontré une résistance:', error));
@@ -237,13 +254,8 @@ const express = require('express');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.get('/', (req, res) => {
-  res.send('☭ Le quartier général de la révolution du bump est opérationnel ! ☭');
-});
+app.get('/', (req, res) => res.send('La révolution est en marche !'));
+app.listen(PORT, () => console.log(`Serveur révolutionnaire en ligne sur le port ${PORT}`));
 
-app.listen(PORT, () => {
-  console.log(`Le QG web est établi sur le port ${PORT}`);
-});
-
-// Début de la révolution
+// Connexion à Discord
 client.login(process.env.DISCORD_TOKEN);
